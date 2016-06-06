@@ -27,6 +27,19 @@ void bitset_copy(bitset_t* dest, const bitset_t* src) {
     memcpy(dest->bits, src->bits, src->natoms * sizeof(bitset_atom_t));
 }
 
+int bitset_resize(bitset_t* bitset, size_t nbits) {
+    size_t new_natoms = BITS_TO_NATOMS(nbits);
+    bitset_atom_t* new_bits = realloc(bitset->bits,
+                                      new_natoms * sizeof(bitset_atom_t));
+    if (!new_bits) {
+        return -1;
+    }
+    bitset->nbits = nbits;
+    bitset->natoms = new_natoms;
+    bitset->bits = new_bits;
+    return 0;
+}
+
 /* {{{ Single bit manipulation */
 
 void bitset_set(bitset_t* bs, size_t bit) {

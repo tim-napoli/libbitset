@@ -63,6 +63,11 @@ void bitset_wipe(bitset_t* bs);
  */
 void bitset_copy(bitset_t* dest, const bitset_t* src);
 
+/* Resize a bitset with new number of bits `nbits`. If this makes the bitset
+ * growing, new bits are set to 0.
+ */
+int bitset_resize(bitset_t* bitset, size_t nbits);
+
 /* Return the state (set, unset) of the given bit.
  * @pre bit < bs->nbits
  */
