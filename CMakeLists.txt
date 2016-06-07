@@ -8,3 +8,7 @@ include_directories("${PROJECT_SOURCE_DIR}/include")
 add_library(bitset STATIC
             src/bitset.c)
 
+install(TARGETS bitset
+        ARCHIVE DESTINATION lib
+       )
+install(DIRECTORY include/ DESTINATION include/)
