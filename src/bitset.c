@@ -42,28 +42,13 @@ int bitset_resize(bitset_t* bitset, size_t nbits) {
 
 /* {{{ Single bit manipulation */
 
-void bitset_set(bitset_t* bs, size_t bit) {
-    assert (bit < bs->nbits);
-    bs->bits[bit / BITS_PER_ATOM] |= (1 << (bit & BITS_PER_ATOM));
-}
+extern bit_t bitset_get(const bitset_t* bs, size_t bit);
 
-void bitset_set_bit(bitset_t* bs, size_t idx, bit_t bit) {
-    if (bitset_get(bs, idx)) {
-        bitset_unset(bs, idx);
-    } else {
-        bitset_set(bs, idx);
-    }
-}
+extern void bitset_set(bitset_t* bs, size_t bit);
 
-void bitset_unset(bitset_t* bs, size_t bit) {
-    assert (bit < bs->nbits);
-    bs->bits[bit / BITS_PER_ATOM] &= ~(1 << (bit & BITS_PER_ATOM));
-}
+extern void bitset_unset(bitset_t* bs, size_t bit);
 
-bit_t bitset_get(const bitset_t* bs, size_t bit) {
-    assert (bit < bs->nbits);
-    return (bs->bits[bit / BITS_PER_ATOM] >> (bit & BITS_PER_ATOM)) & 1;
-}
+extern void bitset_set_bit(bitset_t* bs, size_t idx, bit_t bit);
 
 /* }}} */
 /* {{{ Cool functions */

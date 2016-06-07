@@ -26,6 +26,9 @@
 #ifndef _bitset_h_
 #define _bitset_h_
 
+#include <assert.h>
+#include <stdint.h>
+
 /* A bitset_atom is an integer storing part of bitset */
 typedef uint64_t bitset_atom_t;
 
@@ -71,22 +74,37 @@ int bitset_resize(bitset_t* bitset, size_t nbits);
 /* Return the state (set, unset) of the given bit.
  * @pre bit < bs->nbits
  */
-bit_t bitset_get(const bitset_t* bs, size_t bit);
+inline bit_t bitset_get(const bitset_t* bs, size_t bit) {
+    assert (bit < bs->nbits);
+    return bs->bits[bit / BITS_PER_ATOM] |= (1 << (bit & BITS_PER_ATOM));
+}
 
 /* Set the bit `idx` of `bs`.
  * @pre bit < bs->nbits
  */
-void bitset_set(bitset_t* bs, size_t idx);
-
-/* Set the bit `idx` of `bs` to value `bit`.
- * @pre bit < bs->nbits
- */
-void bitset_set_bit(bitset_t* bs, size_t idx, bit_t bit);
+inline void bitset_set(bitset_t* bs, size_t bit) {
+    assert (bit < bs->nbits);
+    bs->bits[bit / BITS_PER_ATOM] |= (1 << (bit & BITS_PER_ATOM));
+}
 
 /* Unset the bit `idx` of `bs`.
  * @pre bit < bs->nbits
  */
-void bitset_unset(bitset_t* bs, size_t idx);
+inline void bitset_unset(bitset_t* bs, size_t bit) {
+    assert (bit < bs->nbits);
+    bs->bits[bit / BITS_PER_ATOM] &= ~(1 << (bit & BITS_PER_ATOM));
+}
+
+/* Set the bit `idx` of `bs` to value `bit`.
+ * @pre bit < bs->nbits
+ */
+inline void bitset_set_bit(bitset_t* bs, size_t idx, bit_t bit) {
+    if (bitset_get(bs, idx)) {
+        bitset_unset(bs, idx);
+    } else {
+        bitset_set(bs, idx);
+    }
+}
 
 /* Count number of bits set in `bs`.
  */
